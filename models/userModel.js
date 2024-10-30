@@ -48,7 +48,7 @@ const User = class {
    static findByLoginId({loginId}) {
         return new Promise(async (resolve, reject) => {
             try {
-                const userDB = await userSchema.findOne({ $or: [{ email: loginId }, { username: loginId }] });
+                const userDB = await userSchema.findOne({ $or: [{ email: loginId }, { username: loginId }] }).select("+password");
                 if(!userDB) reject("user not found!");
                 resolve(userDB);
             } catch (error) {

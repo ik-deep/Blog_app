@@ -44,6 +44,7 @@ const loginController = async (req, res) => {
 
   try {
     const userDB = await User.findByLoginId({ loginId });
+    //checking user validate
     const isMatch = await bcrypt.compare(password, userDB.password);
     if (!isMatch) {
       return res.send({
@@ -51,6 +52,15 @@ const loginController = async (req, res) => {
         message: "Incorrect password!",
       })
     }
+
+
+    req.session.isAuth = true;
+    req.session.user = {
+      username:userDB.username,
+      email:userDB.email,
+      userId:userDB._id,
+    }
+   
     return res.send({
       status: 201,
       message: "User login successfully!!",
@@ -64,5 +74,9 @@ const loginController = async (req, res) => {
   }
 
 }
+const logutController = (req,res)=>{
+  return res.send("all working");
+}
 
-module.exports = { registerController, loginController };
+
+module.exports = { registerController, loginController, logutController };
