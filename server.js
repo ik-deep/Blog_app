@@ -11,7 +11,9 @@ const app = express();
 const PORT = process.env.PORT;
 
 //middlewares
+app.use(express.json())
 app.use("/auth",authRouter)
+app.use(express.json());
 
 
 app.get('/',(req,res)=>{

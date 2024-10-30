@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-// const { type } = require("os");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     name:{
         type:String,
+        required:true,
     },
     email:{
         type:String,
@@ -15,11 +15,15 @@ const userSchema = new Schema({
         type:String,
         required:true,
         unique:true,
+        minLength:3,
+        maxLength:50
     },
     password:{
         type:String,
         required:true,
-        unique:true,
-        select:false,
+        // select:false,
     }
 })
+
+
+module.exports = mongoose.model("user",userSchema);
