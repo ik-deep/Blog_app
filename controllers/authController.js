@@ -74,9 +74,26 @@ const loginController = async (req, res) => {
   }
 
 }
-const logutController = (req,res)=>{
-  return res.send("all working");
+const logoutController = (req,res)=>{
+  req.session.destroy((err)=>{
+    if(err){
+      return res.send({
+        status:500,
+        message:"Unable to logout",
+      })
+    }
+
+    return res.send({
+      status:200,
+      message:"logout successfull",
+    })
+
+  })
+}
+
+const logoutAllDevicesController = (req,res)=>{
+  return res.send("logout from all device");
 }
 
 
-module.exports = { registerController, loginController, logutController };
+module.exports = { registerController, loginController, logoutController, logoutAllDevicesController };
