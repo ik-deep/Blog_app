@@ -1,6 +1,8 @@
 const { userDataValidation } = require("../utils/authUtils");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 
 const registerController = async (req, res) => {
@@ -56,11 +58,11 @@ const loginController = async (req, res) => {
 
     req.session.isAuth = true;
     req.session.user = {
-      username:userDB.username,
-      email:userDB.email,
-      userId:userDB._id,
+      username: userDB.username,
+      email: userDB.email,
+      userId: userDB._id,
     }
-   
+
     return res.send({
       status: 201,
       message: "User login successfully!!",
@@ -74,25 +76,45 @@ const loginController = async (req, res) => {
   }
 
 }
-const logoutController = (req,res)=>{
-  req.session.destroy((err)=>{
-    if(err){
+const logoutController = (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
       return res.send({
-        status:500,
-        message:"Unable to logout",
+        status: 500,
+        message: "Unable to logout",
       })
     }
 
     return res.send({
-      status:200,
-      message:"logout successfull",
+      status: 200,
+      message: "logout successfull",
     })
 
   })
 }
 
-const logoutAllDevicesController = (req,res)=>{
-  return res.send("logout from all device");
+const logoutAllDevicesController = async (req, res) => {
+  const userId = req.session.user.userId;
+  //create schema
+  const sessionSchema = new Schema({ _id: String }, { strict: false });
+  //convert innto a model
+  const sessionModel = mongoose.model("session", sessionSchema);
+  //mongoose query to delete the entry
+  try {
+    const deleteDB = await sessionModel.deleteMany({
+      "session.user.userId": userId,
+    });
+    return res.send({
+      status: 200,
+      message: "Logout from all the devices is successfully!"
+    })
+  } catch (error) {
+    return res.send({
+      status: 500,
+      message: "Internal server error!",
+      error: error,
+    })
+  }
 }
 
 
