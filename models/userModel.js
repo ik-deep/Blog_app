@@ -59,6 +59,5 @@ const User = class {
     }
 }
 
-// const obj = new User({ name: String, email, username, password })
 
 module.exports = User;

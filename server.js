@@ -7,6 +7,8 @@ require('dotenv').config();
 //file-import
 const db = require("./db");
 const { authRouter } = require("./routers/authRouter");
+const blogRouter = require("./routers/blogRouter");
+const { isAuth } = require("./middlewares/isAuthMiddleware");
 
 //constants
 const app = express();
@@ -24,8 +26,10 @@ app.use(session({
     resave:false,
     saveUninitialized:false
 }))
-app.use("/auth",authRouter)
 app.use(express.json());
+
+app.use("/auth",authRouter)
+app.use("/blog",isAuth,blogRouter)
 
 
 app.get('/',(req,res)=>{
