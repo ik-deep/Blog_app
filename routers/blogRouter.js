@@ -1,8 +1,12 @@
 const express = require("express");
-const { isAuth } = require("../middlewares/isAuthMiddleware");
-const { createBlogController } = require("../controllers/blogController");
+const { createBlogController, getBlogsController, getMyBlogsController, editBlogController, deletBlogController } = require("../controllers/blogController");
 const blogRouter = express.Router()
  
-blogRouter.post("/create-blog",createBlogController);
+blogRouter
+        .post("/create-blog",createBlogController)
+        .get("/get-blogs",getBlogsController)
+        .get("/get-myBlogs",getMyBlogsController)
+        .get("/edit-blog",editBlogController)
+        .post("/delete-blog",deletBlogController)
 
 module.exports = blogRouter;

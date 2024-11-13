@@ -33,7 +33,7 @@ app.use("/blog",isAuth,blogRouter)
 
 
 app.get('/',(req,res)=>{
-   return res.send(`server is up and running on port:${8080}`);
+   return res.send(`server is up and running on port:${PORT}`);
 })
 
 
