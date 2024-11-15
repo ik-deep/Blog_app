@@ -1,5 +1,6 @@
 const userSchema = require("../schemas/userSchema");
 const bcrypt = require("bcrypt");
+const {ObjectId} = require("mongodb");
 
 const User = class {
     // name;
@@ -45,10 +46,11 @@ const User = class {
         })
     }
 
-   static findByLoginId({loginId}) {
+   static findUserByKey({key}) {
         return new Promise(async (resolve, reject) => {
             try {
-                const userDB = await userSchema.findOne({ $or: [{ email: loginId }, { username: loginId }] }).select("+password");
+                if(!key) reject("key is missing")
+                const userDB = await userSchema.findOne({ $or: ObjectId.isValid(key)? [{_id:key}] : [{ email: key }, { username: key }] }).select("+password");
                 if(!userDB) reject("user not found!");
                 resolve(userDB);
             } catch (error) {

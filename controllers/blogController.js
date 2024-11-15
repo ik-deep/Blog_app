@@ -1,4 +1,4 @@
-const { createBlog, getAllBlogs, getMyBlogs, getBlogWithId, editBlog, deleteBlogById } = require("../models/blogModel");
+const { createBlog, getAllBlogs, getMyBlogs, getBlogWithId, editBlog, deleteBlogById, likeBlog, updateBlogLikeField, unlikeBlog } = require("../models/blogModel");
 const {blogDataValidater} = require("../utils/blogUtils")
 
 const createBlogController = async(req,res) =>{
@@ -93,7 +93,7 @@ const editBlogController = async(req,res)=>{
     try{
         const blogDb =await getBlogWithId({blogId});
       
-       if(!userId.equals(blogDb[0].userId)){
+       if(blogDb.length ==0 || !userId.equals(blogDb[0].userId)){
         return res.send({
             status:403,
             message:"not allowed to edit blog",
@@ -143,4 +143,47 @@ const deletBlogController =async (req,res) =>{
       }
 }
 
-module.exports = {createBlogController,getBlogsController,getMyBlogsController,editBlogController,deletBlogController};
+const likeBlogController = async(req,res) =>{
+    const { blogId } = req.body;
+    const userId = req.session.user.userId
+
+    const blogDb = await getBlogWithId({ blogId });
+
+    if (blogDb  && blogDb[0].likedBy.indexOf(userId) == -1) {
+        try {
+            const likedDb = await likeBlog({ blogId, userId, action: "like", });
+            const updateBlogDb = await updateBlogLikeField({ blogId, userId, action:"like" })
+            return res.send({
+                status: 200,
+                message: "Blog liked",
+                data: updateBlogDb
+            })
+        } catch (error) {
+            return res.send({
+                status: 500,
+                message: "Internal server error",
+                error: error,
+            })
+        }
+
+    }else{
+        try {
+            const unlikedDb =await unlikeBlog({ blogId, userId});
+            const updateBlogDb = await updateBlogLikeField({ blogId, userId,action:"unlike" })
+            return res.send({
+                status: 200,
+                message: "Blog unliked",
+                data: unlikedDb
+            })
+        } catch (error) {
+            return res.send({
+                status: 500,
+                message: "Internal server error",
+                error: error,
+            })
+        }
+
+    }
+}
+
+module.exports = {createBlogController,getBlogsController,getMyBlogsController,editBlogController,deletBlogController,likeBlogController};

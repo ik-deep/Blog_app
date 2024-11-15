@@ -13,7 +13,7 @@ const blogSchema = new Schema({
     textBody:{
         type:String,
         required:true,
-        unique:true,
+        // unique:true,
         trim:true,
         minLength:3,
         maxLength:1000
@@ -28,8 +28,21 @@ const blogSchema = new Schema({
         ref:"user",//forign key to user collections
 
     },
+    likesCount: Number, // number of likes
+    likedBy:{
+        type:Array,
+        default:[],
+        ref:"user"
+    },
     imagePath:{
         type:String,
+    },
+    isDeleted:{
+        type:Boolean,
+        default:false,
+    },
+    deletionDateTime:{
+        type:String
     }
 });
 

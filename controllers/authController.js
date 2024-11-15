@@ -45,7 +45,7 @@ const loginController = async (req, res) => {
   }
 
   try {
-    const userDB = await User.findByLoginId({ loginId });
+    const userDB = await User.findUserByKey({key:loginId});
     //checking user validate
     const isMatch = await bcrypt.compare(password, userDB.password);
     if (!isMatch) {

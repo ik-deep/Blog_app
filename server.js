@@ -9,6 +9,8 @@ const db = require("./db");
 const { authRouter } = require("./routers/authRouter");
 const blogRouter = require("./routers/blogRouter");
 const { isAuth } = require("./middlewares/isAuthMiddleware");
+const followRouter = require("./routers/followRouter");
+const cleanUpBin = require("./cron");
 
 //constants
 const app = express();
@@ -30,6 +32,7 @@ app.use(express.json());
 
 app.use("/auth",authRouter)
 app.use("/blog",isAuth,blogRouter)
+app.use("/follow",followRouter)
 
 
 app.get('/',(req,res)=>{
@@ -38,5 +41,6 @@ app.get('/',(req,res)=>{
 
 
 app.listen(PORT,()=>{
-    console.log(clc.yellowBright.underline.bold(`server is runing on port:${PORT}`))
+    console.log(clc.yellowBright.underline.bold(`server is runing on port:${PORT}`));
+    cleanUpBin();
 }) 

@@ -1,5 +1,5 @@
 const express = require("express");
-const { createBlogController, getBlogsController, getMyBlogsController, editBlogController, deletBlogController } = require("../controllers/blogController");
+const { createBlogController, getBlogsController, getMyBlogsController, editBlogController, deletBlogController,likeBlogController } = require("../controllers/blogController");
 const blogRouter = express.Router()
  
 blogRouter
@@ -8,5 +8,6 @@ blogRouter
         .get("/get-myBlogs",getMyBlogsController)
         .get("/edit-blog",editBlogController)
         .post("/delete-blog",deletBlogController)
+        .post("/like",likeBlogController)
 
 module.exports = blogRouter;
